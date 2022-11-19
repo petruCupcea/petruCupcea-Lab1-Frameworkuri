@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AngularJS laborator 1</title>
+  <style>
+      table, th, td {
+          border-collapse: collapse;
+          padding: 16px;
+          text-align: center;
+      }
+
+      table tr:nth-child(odd) {
+          background-color: wheat;
+      }
+
+      table tr:nth-child(even) {
+          border: 1px solid wheat;
+          background-color: white;
+      }
+
+      table tr:last-child td:first-child {
+          border-bottom-left-radius: 16px;
+      }
+
+      table tr:last-child td:last-child {
+          border-bottom-right-radius: 16px;
+      }
+
+      table {
+          border-radius: 16px;
+      }
+
+      .custom-container {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 16px;
+          max-width: 600px;
+          margin: auto;
+          padding: 48px;
+          font-family: Arial;
+      }
+
+      .custom-select {
+          height: 48px;
+          border-radius: 8px;
+          background-color: wheat;
+          padding: 0 16px;
+          border: 1px solid;
+          max-width: 300px;
+      }
+
+      .custom-input {
+          height: 48px;
+          margin-left: 16px;
+          background-color: wheat;
+          border-radius: 8px;
+          padding: 0 16px;
+          border: 1px solid;
+      }
+  </style>
+</head>
+<body>
+<div ng-app="myApp" ng-controller="myCtrl" class="custom-container">
+  <form novalidate>
+    <div id="limit-input">
+      <label for="limit">Limit</label>
+      <input class="custom-input" type="number" ng-model="currentAppliedConfig.limit" id="limit" name="limit">
+    </div>
+    <br>
+  </form>
+  <h2>Tabel care afiseaza nr. de elemente dupa limita</h2>
+  <table>
+    <tr>
+      <th>Nume</th>
+      <th>Pret</th>
+      <th>Categorie</th>
+      <th>Suma</th>
+    </tr>
+    <tr ng-repeat="item in tableItems | limitTo: currentAppliedConfig.limit | orderBy: 'Count'">
+      <td>{{ item.Name }}</td>
+      <td>{{ item.Price }}</td>
+      <td>{{ item.Category }}</td>
+      <td>{{ item.Count }}</td>
+    </tr>
+  </table>
+
+  <h2>Click Pe 'Nume' sau 'Categorie' pentru ca lista sa fie sortata.</h2>
+  <table>
+    <tr>
+      <th ng-click="orderByMe('Name')">Nume</th>
+      <th>Pret</th>
+      <th ng-click="orderByMe('Category')">Categorie</th>
+      <th>Suma</th>
+    </tr>
+    <tr ng-repeat="x in tableItems | orderBy:myOrderBy">
+      <td>{{ x.Name }}</td>
+      <td>{{ x.Price }}</td>
+      <td>{{ x.Category }}</td>
+      <td>{{ x.Count }}</td>
+    </tr>
+  </table>
+
+  <p>Selecteaza o tara:</p>
+
+  <select ng-model="selectedCountry" class="custom-select">
+    <option ng-repeat="x in country" value="{{x.Name}}">{{x.Country}}</option>
+  </select>
+
+  <h1>Capitala este: {{selectedCountry}}</h1>
+
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script>
+    var app = angular.module("myApp", []);
+
+    app.controller("myCtrl", function ($scope) {
+        $scope.defaultConfig = {
+            limit: 2,
+            categories: 0,
+            sortByAmount: {
+                value: false,
+                inputValue: 0,
+                country: '',
+            }
+        };
+        $scope.country = [
+            {
+                Name: 'Rome',
+                Country: 'Italy'
+            },
+            {
+                Name: 'Istanbul',
+                Country: 'Turkey'
+            },
+            {
+                Name: 'Kiev',
+                Country: 'Ukrain'
+            },
+            {
+                Name: 'Berlin',
+                Country: 'Germany'
+            },
+            {
+                Name: 'Amsterdam',
+                Country: "Netherlands"
+            },
+            {
+                Name: 'Paris',
+                Country: 'France'
+            },
+            {
+                Name: 'Madrid',
+                Country: 'Spain'
+            }
+        ];
+
+        $scope.currentAppliedConfig = angular.copy($scope.defaultConfig);
+
+        $scope.tableItems = [
+            {
+                Name: 'Apples',
+                Price: 21.50,
+                Category: 'Fruits',
+                Count: 15
+            },
+            {
+                Name: 'Oreo',
+                Price: 12.00,
+                Category: "Biscuits",
+                Count: 30
+            },
+            {
+                Name: 'Mars',
+                Price: 13.20,
+                Category: 'Chocolate',
+                Count: 1
+            },
+            {
+                Name: 'Bread',
+                Price: 4.30,
+                Category: 'Bakes',
+                Count: 4
+            },
+            {
+                Name: 'Icecream',
+                Price: 7.00,
+                Category: 'Sweets',
+                Count: 3
+            },
+            {
+                Name: 'Bananas',
+                Price: 25.65,
+                Category: 'Fruits',
+                Count: 45
+            },
+        ];
+        $scope.orderByMe = function (x) {
+            $scope.myOrderBy = x;
+        }
+    });
+</script>
+</body>
+</html>
